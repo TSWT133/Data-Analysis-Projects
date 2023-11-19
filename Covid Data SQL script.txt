@@ -1,4 +1,4 @@
-## For this project I used BigQuery to complete my data exploration of the Covid Data set. The files were then exported as CSV files ready to be used in data visualisation tools such as Tableau. Originally I was querying every country in the dataset but due to export limitations in BigQuery I had to either pay for Google Cloud Services or filter to smaller sub sets of data
+## For this project I used BigQuery to complete my data exploration of the Covid Data set. The files were then exported as CSV files ready to be used in data visualisation tools such as Tableau. Originally some queries returned over 300,000 rows but due to export limitations in BigQuery I had to either pay for Google Cloud Services or filter to smaller sub sets of data so that I could export the data to be used in data viz. 
 
 ## Checking if data was imported correctly for CovidDeath
 SELECT *
