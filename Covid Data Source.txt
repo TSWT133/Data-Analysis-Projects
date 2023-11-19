@@ -1,2 +1,1 @@
-## The data used in this project -> https://ourworldindata.org/covid-deaths
-
+## The data used in this data exploration project -> https://ourworldindata.org/covid-deaths
