@@ -1,3 +1,5 @@
+## For this project I used BigQuery to complete my data exploration of the Covid Data set. The files were then exported as CSV files ready to be used in data visualisation tools such as Tableau. 
+
 ## Checking if data was imported correctly for CovidDeath
 SELECT *
 FROM `covid-sql-exploration.CovidData.Covid_Death` 
