@@ -71,5 +71,6 @@ FROM `CovidData.Covid_Death`
 WHERE continent = "Europe"
 ORDER BY location, date
 
+# The query above can now be seen as its own table 
 select * from `covid-sql-exploration.CovidData.infection_rate`
 
