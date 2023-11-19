@@ -1,0 +1,75 @@
+## Checking if data was imported correctly for CovidDeath
+SELECT *
+FROM `covid-sql-exploration.CovidData.Covid_Death` 
+ORDER BY location, date
+
+## Checking if data was imported correctly for CovidVaccination
+SELECT *
+FROM `covid-sql-exploration.CovidData.Covid_Vaccination` 
+ORDER BY location, date
+LIMIT 1000
+
+## Death Rate in the UK and US
+SELECT location, date, population, total_cases, total_deaths, (total_deaths / total_cases) * 100 AS death_rate_percentage
+FROM `covid-sql-exploration.CovidData.Covid_Death` 
+WHERE location = "United Kingdom" or location like "%states%"
+ORDER BY location, date
+LIMIT 200
+
+## Death count by country
+SELECT location, population, MAX(total_deaths) AS highest_death_count, MAX(total_cases) AS highest_total_cases, 
+FROM `covid-sql-exploration.CovidData.Covid_Death`
+WHERE continent is not null ## Origninally without this line an error came up where continents and income class were showing up in the location column
+GROUP BY location, population
+ORDER BY highest_death_count Desc
+LIMIT 200
+
+## Infection Rate
+SELECT location, date, population, total_cases, (total_cases / population) * 100 AS infection_rate_percentage
+FROM `covid-sql-exploration.CovidData.Covid_Death` 
+WHERE continent is not null
+ORDER BY location, date
+LIMIT 200
+
+## Countries with highest infection rate
+SELECT location, population, MAX(total_cases) AS highest_infection_count, MAX((total_cases / population)) * 100 AS highest_infection_rate_percentage
+FROM `covid-sql-exploration.CovidData.Covid_Death` 
+WHERE continent is not null
+GROUP BY location, population
+ORDER BY highest_infection_rate_percentage desc
+LIMIT 200
+
+## Death count by continent
+SELECT continent, MAX(total_deaths) AS total_death_count
+FROM `covid-sql-exploration.CovidData.Covid_Death` 
+WHERE continent is not null 
+GROUP BY continent
+ORDER by total_death_count desc
+
+## Daily death percentage across the world by date 
+SELECT date, SUM(new_cases) AS daily_cases, SUM(new_deaths) as daily_deaths, NULLIF(new_deaths,0) / NULLIF(new_cases, 0) * 100 AS daily_death_percentage 
+## use of NULLIF to ignore divisions by 0 as it would keep giving errors
+FROM `covid-sql-exploration.CovidData.Covid_Death` 
+WHERE continent is not null
+GROUP BY date, new_deaths, new_cases
+ORDER BY date
+LIMIT 10000
+
+## Using join function to explore vaccinations
+SELECT death.continent, death.location, death.date, death.population, vaccin.new_vaccinations, SUM(vaccin.new_vaccinations) OVER (PARTITION BY death.location ORDER BY death.location, death.date) AS Rolling_vaccination_count, ((SUM(vaccin.new_vaccinations) OVER (PARTITION BY death.location ORDER BY death.location, death.date)) / death.population) * 100 as percentage_vaccinated
+FROM `covid-sql-exploration.CovidData.Covid_Death` as death
+JOIN `covid-sql-exploration.CovidData.Covid_Vaccination` as vaccin
+ON death.location = vaccin.location AND death.date = vaccin.date
+WHERE death.continent is not null
+ORDER BY death.location, death.date
+
+
+## Creating Views of each query to be exported to Tablaeu
+create view CovidData.infection_rate AS
+SELECT location, date, population, total_cases, (total_cases / population) * 100 AS infection_rate_percentage
+FROM `CovidData.Covid_Death` 
+WHERE continent = "Europe"
+ORDER BY location, date
+
+select * from `covid-sql-exploration.CovidData.infection_rate`
+
