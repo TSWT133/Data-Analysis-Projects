@@ -1,6 +1,6 @@
 ## Airbnb Data Cleaning
 
-For this project, I worked with the [Airbnb Open Data](https://www.kaggle.com/datasets/arianazmoudeh/airbnbopendata). The primary objective was to execute a data cleaning process using SQL (specifically BigQuery) to ensure the accuracy, consistency, and reliability of the dataset.
+For this project, I worked with the [Inside Airbnb Data](http://insideairbnb.com/get-the-data). The primary objective was to execute a data cleaning process using SQL (specifically BigQuery) to ensure the accuracy, consistency, and reliability of the dataset.
 
 ### Project Focus:
 
@@ -8,7 +8,7 @@ For this project, I worked with the [Airbnb Open Data](https://www.kaggle.com/da
 
 ### Dataset Source:
 
-The project exclusively revolves around the comprehensive [Airbnb Open Data](https://www.kaggle.com/datasets/arianazmoudeh/airbnbopendata). This dataset encapsulates a wide array of information related to Airbnb listings, including geographical locations, property details, prices, and more.
+The project exclusively revolves around the comprehensive [Inside Airbnb Data](http://insideairbnb.com/get-the-data). This dataset encapsulates a wide array of information related to Airbnb listings, including geographical locations, property details, prices, and more.
 
 ### Project Files:
 
