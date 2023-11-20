@@ -14,7 +14,6 @@ JOIN `airbnb-data-cleaning.London_data.Reviews` as reviews
 ON reviews.listing_id = listings.id
 GROUP by listings.id, listings.name, listings.host_id, listings.host_name, listings.neighbourhood_group, listings.neighbourhood, listings.latitude, listings.longitude, listings.room_type,  listings.price, listings.minimum_nights, listings.number_of_reviews,  listings.last_review, listings.reviews_per_month,  listings.calculated_host_listings_count, listings.availability_365, listings.number_of_reviews_ltm, listings.license
 
-
 SELECT * FROM `airbnb-data-cleaning.London_data.populated_listings` LIMIT 1000
 
 ## Condensed values in the 'name' column of the Listings table were split apart for clearer analysis, allowing each value to have its own dedicated column.
@@ -27,7 +26,7 @@ SELECT
   id, host_id, host_name, neighbourhood, latitude, longitude, room_type, price, minimum_nights, number_of_reviews, last_review, reviews_per_month, calculated_host_listings_count, availability_365, number_of_reviews_ltm
 FROM `airbnb-data-cleaning.London_data.populated_listings`;
 
-CREATE VIEW London_data.split_listings AS
+CREATE view London_data.split_listings as
 SELECT 
   SPLIT(name, ' · ')[SAFE_OFFSET(0)] AS property_type,
   SPLIT(name, ' · ')[SAFE_OFFSET(1)] AS rating,
@@ -37,15 +36,12 @@ SELECT
   id, host_id, host_name, neighbourhood, latitude, longitude, room_type, price, minimum_nights, number_of_reviews, last_review, reviews_per_month, calculated_host_listings_count, availability_365, number_of_reviews_ltm
 FROM `airbnb-data-cleaning.London_data.populated_listings`;
 
-## To ensure uniformity in data types for the longitude and latitude columns, rounding them to 6 decimal places would make them consistent:
-SELECT
-*,
-  ROUND(latitude, 6) AS latitude,
-   ROUND(longitude, 6) AS longitude,
-FROM
-  `airbnb-data-cleaning.London_data.split_listings`
+## To ensure uniformity in data types for columns longitude and latitude, rounding them to six decimal places would make them consistent:
+Select property_type, rating, bedrooms, beds, baths, id, host_id, host_name, neighbourhood,
+round(latitude, 6) as latitude,
+round(longitude, 6) as longitude, room_type, price, minimum_nights, number_of_reviews, last_review, reviews_per_month, calculated_host_listings_count, availability_365, number_of_reviews_ltm
+From `airbnb-data-cleaning.London_data.split_listings`
 
-## Another option would be to create a new table 
+select * 
+from `airbnb-data-cleaning.London_data.split_listings`
 
-CREATE OR REPLACE TABLE `airbnb-data-cleaning.London_data.normalized_listings` AS
-Select
