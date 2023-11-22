@@ -11,9 +11,9 @@ Each project in this repository demonstrates a specific aspect of data analysis,
 
 **Visualization:** Creating visual representations to communicate insights effectively.
 
-I have utilized a diverse set of tools and programming languages, including:
+**Report Writing:** 
 
-**Excel:** Leveraging Excel for data manipulation, basic analysis, and visualization.
+I have utilized a diverse set of tools and programming languages, including:
 
 **SQL:** Performing data querying and manipulation using SQL databases.
 
