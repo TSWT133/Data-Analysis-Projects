@@ -113,7 +113,7 @@ FROM (
 
 SELECT * FROM `airbnb-data-cleaning.London_data.Cleaned_data`
 
-## When attempting to format the ratings so that it reads just the numeric value without the string I came across an error due to some data from the bedrooms column being mixed into the ratings column
+## When attempting to format the ratings so that it reads just the numeric value as a FLOAT without the string I came across an error due to some data from the bedrooms column being mixed into the ratings column
 
 SELECT rating, bedrooms, beds, baths
 FROM `airbnb-data-cleaning.London_data.Cleaned_data`
@@ -172,5 +172,12 @@ FROM (
         listings.number_of_reviews_ltm,
         listings.license
 ) AS subquery;
+
+## We can now export the results as a new table and check if there are still errrors in splitting the name column
+
+## Again when formatting the ratings column as FLOAT instead of string and error came up for some values coming up as '★New' since this can be accounted for due to being new listings we can null these values
+SELECT rating
+FROM `airbnb-data-cleaning.London_data.Cleaned_data_2`
+WHERE rating LIKE '%New%'
 
 
