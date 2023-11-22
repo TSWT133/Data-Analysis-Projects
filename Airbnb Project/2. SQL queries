@@ -1,47 +1,176 @@
-## Upon reviewing the original data, it became evident that errors had occurred during the import of the last review date into the Listings table. By employing a join function, I successfully identified and filled the table with the accurate dates.
+# 1. Checking for errors
+SELECT * FROM `airbnb-data-cleaning.London_data.Listings` LIMIT 1000
 
-SELECT listings.*, MAX(reviews.date) as latest_reviews_date 
-FROM `airbnb-data-cleaning.London_data.Listings` as listings
-JOIN `airbnb-data-cleaning.London_data.Reviews` as reviews
-ON reviews.listing_id = listings.id
-GROUP by listings.id, listings.name, listings.host_id, listings.host_name, listings.neighbourhood_group, listings.neighbourhood, listings.latitude, listings.longitude, listings.room_type,  listings.price, listings.minimum_nights, listings.number_of_reviews,  listings.last_review, listings.reviews_per_month,  listings.calculated_host_listings_count, listings.availability_365, listings.number_of_reviews_ltm, listings.license
-
-## We can then create a view so that queries can be executed on it at a later date without altering the original table
-Create view London_data.populated_listings AS
-SELECT listings.*, MAX(reviews.date) as latest_reviews_date 
-FROM `airbnb-data-cleaning.London_data.Listings` as listings
-JOIN `airbnb-data-cleaning.London_data.Reviews` as reviews
-ON reviews.listing_id = listings.id
-GROUP by listings.id, listings.name, listings.host_id, listings.host_name, listings.neighbourhood_group, listings.neighbourhood, listings.latitude, listings.longitude, listings.room_type,  listings.price, listings.minimum_nights, listings.number_of_reviews,  listings.last_review, listings.reviews_per_month,  listings.calculated_host_listings_count, listings.availability_365, listings.number_of_reviews_ltm, listings.license
-
-SELECT * FROM `airbnb-data-cleaning.London_data.populated_listings` LIMIT 1000
-
-## Condensed values in the 'name' column of the Listings table were split apart for clearer analysis, allowing each value to have its own dedicated column.
+## 2. By performing a join operation between the Listings and Reviews tables, I resolved import errors in the 'last review date' field. This allowed me to accurately populate the table with the correct dates and cross-reference them against the original data
 SELECT 
-  SPLIT(name, ' · ')[SAFE_OFFSET(0)] AS property_type,
-  SPLIT(name, ' · ')[SAFE_OFFSET(1)] AS rating,
-  CAST(REGEXP_EXTRACT(COALESCE(SPLIT(name, ' · ')[SAFE_OFFSET(2)], ''), r'(\d+)') AS INT64) AS bedrooms,
-  CAST(REGEXP_EXTRACT(COALESCE(SPLIT(name, ' · ')[SAFE_OFFSET(3)], ''), r'(\d+)') AS INT64) AS beds,
-  CAST(REGEXP_EXTRACT(COALESCE(SPLIT(name, ' · ')[SAFE_OFFSET(4)], ''), r'(\d+)') AS INT64) AS baths,
-  id, host_id, host_name, neighbourhood, latitude, longitude, room_type, price, minimum_nights, number_of_reviews, last_review, reviews_per_month, calculated_host_listings_count, availability_365, number_of_reviews_ltm
-FROM `airbnb-data-cleaning.London_data.populated_listings`;
+    listings.*,
+    MAX(reviews.date) AS latest_reviews_date 
+FROM 
+    `airbnb-data-cleaning.London_data.Listings` AS listings
+JOIN 
+    `airbnb-data-cleaning.London_data.Reviews` AS reviews
+ON 
+    reviews.listing_id = listings.id
+GROUP BY 
+    listings.id, 
+    listings.name, 
+    listings.host_id, 
+    listings.host_name, 
+    listings.neighbourhood_group, 
+    listings.neighbourhood, 
+    listings.latitude, 
+    listings.longitude, 
+    listings.room_type,  
+    listings.price, 
+    listings.minimum_nights, 
+    listings.number_of_reviews,  
+    listings.last_review, 
+    listings.reviews_per_month,  
+    listings.calculated_host_listings_count, 
+    listings.availability_365, 
+    listings.number_of_reviews_ltm, 
+    listings.license
 
-CREATE view London_data.split_listings as
+
+## 3. Condensed values in the 'name' column of the Listings table were split apart for clearer analysis, allowing each value to have its own dedicated column.
 SELECT 
-  SPLIT(name, ' · ')[SAFE_OFFSET(0)] AS property_type,
-  SPLIT(name, ' · ')[SAFE_OFFSET(1)] AS rating,
-  CAST(REGEXP_EXTRACT(COALESCE(SPLIT(name, ' · ')[SAFE_OFFSET(2)], ''), r'(\d+)') AS INT64) AS bedrooms,
-  CAST(REGEXP_EXTRACT(COALESCE(SPLIT(name, ' · ')[SAFE_OFFSET(3)], ''), r'(\d+)') AS INT64) AS beds,
-  CAST(REGEXP_EXTRACT(COALESCE(SPLIT(name, ' · ')[SAFE_OFFSET(4)], ''), r'(\d+)') AS INT64) AS baths,
-  id, host_id, host_name, neighbourhood, latitude, longitude, room_type, price, minimum_nights, number_of_reviews, last_review, reviews_per_month, calculated_host_listings_count, availability_365, number_of_reviews_ltm
-FROM `airbnb-data-cleaning.London_data.populated_listings`;
+    SPLIT(name, ' · ')[SAFE_OFFSET(0)] AS property_type,
+    SPLIT(name, ' · ')[SAFE_OFFSET(1)] AS rating,
+    CAST(REGEXP_EXTRACT(COALESCE(SPLIT(name, ' · ')[SAFE_OFFSET(2)], ''), r'(\d+)') AS INT64) AS bedrooms,
+    CAST(REGEXP_EXTRACT(COALESCE(SPLIT(name, ' · ')[SAFE_OFFSET(3)], ''), r'(\d+)') AS INT64) AS beds,
+    CAST(REGEXP_EXTRACT(COALESCE(SPLIT(name, ' · ')[SAFE_OFFSET(4)], ''), r'(\d+)') AS INT64) AS baths,
+    id, 
+    host_id, 
+    host_name, 
+    neighbourhood, 
+    latitude, 
+    longitude, 
+    room_type, 
+    price, 
+    minimum_nights, 
+    number_of_reviews, 
+    last_review, 
+    reviews_per_month, 
+    calculated_host_listings_count, 
+    availability_365, 
+    number_of_reviews_ltm
+FROM 
+    `airbnb-data-cleaning.London_data.populated_listings`
 
-## To ensure uniformity in data types for columns longitude and latitude, rounding them to six decimal places would make them consistent:
-Select property_type, rating, bedrooms, beds, baths, id, host_id, host_name, neighbourhood,
-round(latitude, 6) as latitude,
-round(longitude, 6) as longitude, room_type, price, minimum_nights, number_of_reviews, last_review, reviews_per_month, calculated_host_listings_count, availability_365, number_of_reviews_ltm
-From `airbnb-data-cleaning.London_data.split_listings`
 
-select * 
-from `airbnb-data-cleaning.London_data.split_listings`
+## 4. Combining the 2nd and 3rd query using a combination of subqueries and join functions 
+SELECT 
+    SPLIT(subquery.name, ' · ')[SAFE_OFFSET(0)] AS property_type,
+    SPLIT(subquery.name, ' · ')[SAFE_OFFSET(1)] AS rating,
+    CAST(REGEXP_EXTRACT(COALESCE(SPLIT(subquery.name, ' · ')[SAFE_OFFSET(2)], ''), r'(\d+)') AS INT64) AS bedrooms,
+    CAST(REGEXP_EXTRACT(COALESCE(SPLIT(subquery.name, ' · ')[SAFE_OFFSET(3)], ''), r'(\d+)') AS INT64) AS beds,
+    CAST(REGEXP_EXTRACT(COALESCE(SPLIT(subquery.name, ' · ')[SAFE_OFFSET(4)], ''), r'(\d+)') AS INT64) AS baths,
+    subquery.id, 
+    subquery.host_id, 
+    subquery.host_name, 
+    subquery.neighbourhood, 
+    subquery.latitude, 
+    subquery.longitude, 
+    subquery.room_type, 
+    subquery.price, 
+    subquery.minimum_nights, 
+    subquery.number_of_reviews, 
+    subquery.last_review, 
+    subquery.reviews_per_month, 
+    subquery.calculated_host_listings_count, 
+    subquery.availability_365, 
+    subquery.number_of_reviews_ltm,
+    subquery.license
+FROM (
+    SELECT 
+        listings.*,
+        MAX(reviews.date) as latest_reviews_date 
+    FROM `airbnb-data-cleaning.London_data.Listings` as listings
+    JOIN `airbnb-data-cleaning.London_data.Reviews` as reviews
+    ON reviews.listing_id = listings.id
+    GROUP by 
+        listings.id, 
+        listings.name, 
+        listings.host_id, 
+        listings.host_name, 
+        listings.neighbourhood_group, 
+        listings.neighbourhood, 
+        listings.latitude, 
+        listings.longitude, 
+        listings.room_type,  
+        listings.price, 
+        listings.minimum_nights, 
+        listings.number_of_reviews,  
+        listings.last_review, 
+        listings.reviews_per_month,  
+        listings.calculated_host_listings_count, 
+        listings.availability_365, 
+        listings.number_of_reviews_ltm,
+        listings.license
+) AS subquery;
+
+## Exporting the query results from the previous query 4. into a new table resolved issues stemming from aggregate function.
+
+SELECT * FROM `airbnb-data-cleaning.London_data.Cleaned_data`
+
+## When attempting to format the ratings so that it reads just the numeric value without the string I came across an error due to some data from the bedrooms column being mixed into the ratings column
+
+SELECT rating, bedrooms, beds, baths
+FROM `airbnb-data-cleaning.London_data.Cleaned_data`
+WHERE rating LIKE '%bedrooms%'
+
+## To update this I updated query 4. so that the ratings column would only be populated when theres a ★ before it
+SELECT 
+    SPLIT(subquery.name, ' · ')[SAFE_OFFSET(0)] AS property_type,
+    CASE 
+        WHEN REGEXP_CONTAINS(SPLIT(subquery.name, ' · ')[SAFE_OFFSET(1)], r'^★') THEN SPLIT(subquery.name, ' · ')[SAFE_OFFSET(1)]
+        ELSE NULL
+    END AS rating,
+    CAST(REGEXP_EXTRACT(COALESCE(SPLIT(subquery.name, ' · ')[SAFE_OFFSET(2)], ''), r'(\d+)') AS INT64) AS bedrooms,
+    CAST(REGEXP_EXTRACT(COALESCE(SPLIT(subquery.name, ' · ')[SAFE_OFFSET(3)], ''), r'(\d+)') AS INT64) AS beds,
+    CAST(REGEXP_EXTRACT(COALESCE(SPLIT(subquery.name, ' · ')[SAFE_OFFSET(4)], ''), r'(\d+)') AS INT64) AS baths,
+    subquery.id, 
+    subquery.host_id, 
+    subquery.host_name, 
+    subquery.neighbourhood, 
+    subquery.latitude, 
+    subquery.longitude, 
+    subquery.room_type, 
+    subquery.price, 
+    subquery.minimum_nights, 
+    subquery.number_of_reviews, 
+    subquery.last_review, 
+    subquery.reviews_per_month, 
+    subquery.calculated_host_listings_count, 
+    subquery.availability_365, 
+    subquery.number_of_reviews_ltm,
+    subquery.license
+FROM (
+    SELECT 
+        listings.*,
+        MAX(reviews.date) as latest_reviews_date 
+    FROM `airbnb-data-cleaning.London_data.Listings` as listings
+    JOIN `airbnb-data-cleaning.London_data.Reviews` as reviews
+    ON reviews.listing_id = listings.id
+    GROUP by 
+        listings.id, 
+        listings.name, 
+        listings.host_id, 
+        listings.host_name, 
+        listings.neighbourhood_group, 
+        listings.neighbourhood, 
+        listings.latitude, 
+        listings.longitude, 
+        listings.room_type,  
+        listings.price, 
+        listings.minimum_nights, 
+        listings.number_of_reviews,  
+        listings.last_review, 
+        listings.reviews_per_month,  
+        listings.calculated_host_listings_count, 
+        listings.availability_365, 
+        listings.number_of_reviews_ltm,
+        listings.license
+) AS subquery;
+
 
