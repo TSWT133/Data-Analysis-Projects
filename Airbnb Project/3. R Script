@@ -78,9 +78,8 @@ ggplot(data = Airbnb_Cleaned, aes(x = longitude, y = latitude, color = room_type
   geom_point(size = 0.1)
   labs(title = "Map of Listings by Room Type", x = "Longitude", y = "Latitude") +
   scale_color_discrete(name = "Room Type")
-  
-  library(ggmap)
-  
+
+
   # Register your Google Maps API key
   register_google(key = "************************")
   
