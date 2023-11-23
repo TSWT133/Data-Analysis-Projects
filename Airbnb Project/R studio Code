@@ -1,0 +1,61 @@
+## Installing the necessary packages to conduct the analysis
+install.packages("readr")
+library(readr)
+install.packages("tidyr")
+library(tidyr)
+install.packages("dplyr")
+library(dplyr)
+install.packages("ggplot2")
+library(ggplot2)
+
+## Next I uploaded the dataset to the file directory and imported the data frame ready for manipulation
+## The data can be summarised in various ways
+
+summary_total_reviews_room_type <- Airbnb_Cleaned %>%
+  group_by(room_type) %>%
+  summarise(total_reviews = sum(number_of_reviews))
+
+summary_neighbourhood_price <- Airbnb_Cleaned %>%
+  group_by(neighbourhood) %>%
+  summarise(avg_price = mean(price, na.rm = TRUE)) %>%
+  arrange(avg_price)
+
+summary_median_avail_neighbourhood <- Airbnb_Cleaned %>%
+  group_by(neighbourhood) %>%
+  summarise(median_avail = median(availability_365))
+
+
+## Visualisation
+
+ggplot(data = summary_max_reviews_room_type, aes(x = room_type, y = max_reviews)) +
+  geom_bar(stat = "identity", fill = "lightblue") +
+  labs(title = "Max Reviews per Room Type", x = "Room Type", y = "Max Reviews") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(data = summary_neighbourhood_price, aes(x = neighbourhood, y = avg_price)) +
+  geom_bar(stat = "identity", fill = "lightgreen") +
+  labs(title = "Average Price by Neighbourhood", x = "Neighbourhood", y = "Average Price") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+ggplot(data = summary_median_avail_neighbourhood, aes(x = neighbourhood, y = median_avail)) +
+  geom_bar(stat = "identity", fill = "lightgreen") +
+  labs(title = "Median Availability per Neighbourhood", x = "Neighbourhood", y = "Median Availability") +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
+
+ggplot(data = summary_total_reviews_room_type, aes(x = room_type, y = total_reviews)) +
+  geom_point(size = 3, color = "purple") +
+  labs(title = "Total Reviews per Room Type", x = "Room Type", y = "Total Reviews") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(data = Airbnb_Cleaned, aes(x = factor(room_type), y = number_of_reviews)) +
+  geom_point(size = 2, color = "blue") +
+  labs(title = "Reviews per Room Type", x = "Room Type", y = "Number of Reviews") +
+  facet_wrap(~room_type, scales = "free") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggplot(data = Airbnb_Cleaned, aes(x = price, y = Rating)) +
+  geom_point(size = 2) +
+  labs(title = "Rating vs Price by Room Type", x = "Price", y = "Rating") +
+  facet_wrap(~ room_type, scales = "free") +
+  theme_minimal()
+
