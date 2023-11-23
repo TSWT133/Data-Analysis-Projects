@@ -7,9 +7,16 @@ install.packages("dplyr")
 library(dplyr)
 install.packages("ggplot2")
 library(ggplot2)
+install.packages("ggmap")
+library(ggmap)
 
 ## Next I uploaded the dataset to the file directory and imported the data frame ready for manipulation
-## The data can be summarised in various ways
+
+filtered_price_outliers <- Airbnb_Cleaned %>%
+  filter(price < 2000)
+
+
+## We can summarise the data in various ways
 
 summary_total_reviews_room_type <- Airbnb_Cleaned %>%
   group_by(room_type) %>%
@@ -53,9 +60,34 @@ ggplot(data = Airbnb_Cleaned, aes(x = factor(room_type), y = number_of_reviews))
   facet_wrap(~room_type, scales = "free") +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-ggplot(data = Airbnb_Cleaned, aes(x = price, y = Rating)) +
+
+ggplot(data = filtered_price_outliers, aes(x = Rating, y = price, color = room_type)) +
   geom_point(size = 2) +
-  labs(title = "Rating vs Price by Room Type", x = "Price", y = "Rating") +
+  labs(title = "Price vs Rating by Room Type", x = "Rating", y = "Price") +
   facet_wrap(~ room_type, scales = "free") +
   theme_minimal()
 
+ggplot(data = filtered_price_outliers, aes(x = Rating, y = price, color = room_type)) +
+  geom_point(size = 2) +
+  geom_smooth(method = "lm", se = FALSE) +  # Adding linear regression line
+  labs(title = "Price vs Rating by Room Type", x = "Rating", y = "Price") +
+  facet_wrap(~ room_type, scales = "free") +
+  theme_minimal()
+
+ggplot(data = Airbnb_Cleaned, aes(x = longitude, y = latitude, color = room_type)) +
+  geom_point(size = 0.1)
+  labs(title = "Map of Listings by Room Type", x = "Longitude", y = "Latitude") +
+  scale_color_discrete(name = "Room Type")
+  
+  library(ggmap)
+  
+  # Register your Google Maps API key
+  register_google(key = "************************")
+  
+  # Getting a map of London
+  london_map <- get_map(location = "London", zoom = 11, maptype = "roadmap")
+
+  # Plotting the map
+  ggmap(london_map) +
+    geom_point(data = Airbnb_Cleaned, aes(x = longitude, y = latitude), size = 0.1, colour = "red", alpha = 0.5) +
+    labs(title = "Map of London Listings", x = "Longitude", y = "Latitude")
