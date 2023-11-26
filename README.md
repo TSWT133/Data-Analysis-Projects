@@ -5,15 +5,14 @@ This repository contains a collection of projects showcasing my expertise in dat
 ### Project Overview
 Each project in this repository demonstrates a specific aspect of data analysis, including:
 
-**Data Cleaning:** Transforming raw data into a structured format suitable for analysis.
+**ETL:** ETL (Extract, Transform, Load): Converting raw data into a structured format optimized for analysis.
 
 **Exploratory Data Analysis (EDA):** Uncovering patterns, trends, and relationships within the data.
 
 **Visualization:** Creating visual representations to communicate insights effectively.
 
-**Report Writing:** 
 
-I have utilized a diverse set of tools and programming languages, including:
+Tools and programming languages used:
 
 **SQL:** Performing data querying and manipulation using SQL databases.
 
