@@ -34,11 +34,12 @@ GROUP BY
 
 ## 3. Condensed values in the 'name' column of the Listings table were split apart for clearer analysis, allowing each value to have its own dedicated column.
 SELECT 
+    name,
     SPLIT(name, ' · ')[SAFE_OFFSET(0)] AS property_type,
-    SPLIT(name, ' · ')[SAFE_OFFSET(1)] AS rating,
+    SPLIT(name, ' · ')[SAFE_OFFSET(1)] AS rating, -- Number extracted at a later stage due to multiple value types
     CAST(REGEXP_EXTRACT(COALESCE(SPLIT(name, ' · ')[SAFE_OFFSET(2)], ''), r'(\d+)') AS INT64) AS bedrooms,
     CAST(REGEXP_EXTRACT(COALESCE(SPLIT(name, ' · ')[SAFE_OFFSET(3)], ''), r'(\d+)') AS INT64) AS beds,
-    CAST(REGEXP_EXTRACT(COALESCE(SPLIT(name, ' · ')[SAFE_OFFSET(4)], ''), r'(\d+)') AS INT64) AS baths,
+    SPLIT(COALESCE(SPLIT(name, ' · ')[SAFE_OFFSET(4)], ''), ' ')[OFFSET(0)] AS bath,-- Number extracted at a later stage due to multiple value types
     id, 
     host_id, 
     host_name, 
@@ -56,7 +57,6 @@ SELECT
     number_of_reviews_ltm
 FROM 
     `airbnb-data-cleaning.London_data.populated_listings`
-
 
 ## 4. Combining the 2nd and 3rd query using a combination of subqueries and join functions 
 SELECT 
