@@ -21,9 +21,10 @@ Tools and programming languages used:
 **Tableau:** Creating interactive and insightful visualizations for data exploration.
 
 ### Projects
+- [Airbnb Project](https://github.com/TSWT133/Data-Analysis-Projects/tree/main/Airbnb%20Project)
+
 - [Covid Project](https://github.com/TSWT133/Data-Analysis-Projects/tree/main/Covid%20Project)
   
-- [Airbnb Project](https://github.com/TSWT133/Data-Analysis-Projects/tree/main/Airbnb%20Project)
 
 ### Contact
 If you have any questions, suggestions, or would like to discuss collaboration opportunities, feel free to reach out to me at **thomasto133@gmail.com**
