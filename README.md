@@ -5,7 +5,7 @@ This repository contains a collection of projects showcasing my expertise in dat
 ### Project Overview
 Each project in this repository demonstrates a specific aspect of data analysis, including:
 
-**ETL:** ETL (Extract, Transform, Load): Converting raw data into a structured format optimized for analysis.
+**Extract, Transform, Load (ETL):** Converting raw data into a structured format optimized for analysis.
 
 **Exploratory Data Analysis (EDA):** Uncovering patterns, trends, and relationships within the data.
 
