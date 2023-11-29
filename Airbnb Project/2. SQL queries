@@ -61,17 +61,17 @@ SELECT
 FROM 
     `airbnb-data-cleaning.London_data.populated_listings`
 
-## Query 4. Searched for any outliers and incorrect values in the ratings column 
+## Query 4. Identifying rating outliers and incorrect values
 
 SELECT distinct rating FROM `airbnb-data-cleaning.London_data.split_listings`
 ORDER BY rating ASC;
 
-## Query 5. Included all columns to identify where inconsistencies might have caused issues with data extraction
+## Query 5. Examined columns for potential inconsistencies due to ratings related problems
 
 SELECT * FROM `airbnb-data-cleaning.London_data.split_listings`
 WHERE rating LIKE '%bedroom%'
 
-## Query 6 Modified query 3 to account for different format type causing the issue 
+## Query 6: Adjusting query 3 for variations in format types causing issues 
 
 SELECT 
     name,
@@ -111,7 +111,7 @@ SELECT
 FROM 
     `airbnb-data-cleaning.London_data.populated_listings`
 
-## Query 7. Converted data type of the split columns to read as Integers instead of string 
+## Query 7. Converted split columns to integers instead of string
 SELECT 
     name,
     property_type,
