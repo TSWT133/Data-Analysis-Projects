@@ -111,6 +111,33 @@ SELECT
 FROM 
     `airbnb-data-cleaning.London_data.populated_listings`
 
-## Query 7. 
+## Query 7. Converted data type of the split columns to read as Integers instead of string 
+SELECT 
+    name,
+    property_type,
+    -- Values seen as ★New can be assumed to be null as they are new listings
+    CASE 
+        WHEN rating = '★New' THEN NULL 
+        ELSE CAST(rating AS FLOAT64)
+    END AS rating,
+    CAST(bedrooms AS INT64) AS bedrooms,
+    CAST(beds AS INT64) as beds,
+    CAST(bath AS FLOAT64) AS bath,
+    id, 
+    host_id, 
+    host_name, 
+    neighbourhood, 
+    latitude, 
+    longitude, 
+    room_type, 
+    price, 
+    minimum_nights, 
+    number_of_reviews, 
+    last_review, 
+    reviews_per_month, 
+    calculated_host_listings_count, 
+    availability_365, 
+    number_of_reviews_ltm
+FROM `airbnb-data-cleaning.London_data.split_listings_v2` 
 
 
