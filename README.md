@@ -7,7 +7,7 @@ Each project in this repository demonstrates a specific aspect of data analysis,
 
 **Extract, Transform, Load (ETL):** Converting raw data into a structured format optimized for analysis.
 
-**Exploratory Data Analysis (EDA):** Uncovering patterns, trends, and relationships within the data.
+**Descriptive Analysis & Exploratory Data Analysis (EDA):** Uncovering patterns, trends, and relationships within the data.
 
 **Visualization:** Creating visual representations to communicate insights effectively.
 
