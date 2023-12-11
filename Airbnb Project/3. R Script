@@ -10,21 +10,8 @@ library(ggplot2)
 install.packages("ggmap")
 library(ggmap)
 
-1. summary_total_reviews_room_type <- Airbnb_cleaned_listings %>%
-  group_by(room_type) %>%
-  summarise(total_reviews = sum(number_of_reviews)) %>%
-  arrange(desc(total_reviews))
 
-ggplot(summary_total_reviews_room_type, aes(x = reorder(room_type, total_reviews), y = total_reviews, fill = room_type)) +
-  geom_bar(stat = "identity", color = "black") +
-  labs(title = "Total Reviews by Room Type",
-       x = "Room Type",
-       y = "Total Reviews") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
-  scale_y_continuous(labels = function(x) format(x, scientific = FALSE))
-
-2. summary_percentage_reviews_per_room_type <- summary_total_reviews_room_type %>%
+1. summary_percentage_reviews_per_room_type <- summary_total_reviews_room_type %>%
   mutate(percentage_reviews = (total_reviews / sum(total_reviews)) * 100)
 
 ggplot(summary_percentage_reviews_per_room_type, aes(x = reorder(room_type, percentage_reviews), y = percentage_reviews, fill = room_type)) + 
@@ -35,7 +22,7 @@ ggplot(summary_percentage_reviews_per_room_type, aes(x = reorder(room_type, perc
   labs(title = "Review distribution by room_type", x = "Room Type", y = "Review Distribution Percentage")
 
 
-3. room_type_percentages <- Airbnb_cleaned_listings %>%
+2. room_type_percentages <- Airbnb_cleaned_listings %>%
   count(room_type) %>%
   mutate(percentage = n / sum(n) * 100)
 
@@ -50,7 +37,7 @@ ggplot(room_type_percentages, aes(x = reorder(room_type, percentage), y = percen
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
-4. summary_avg_availability <- Airbnb_cleaned_listings %>%
+3. summary_avg_availability <- Airbnb_cleaned_listings %>%
   group_by(room_type) %>%
   summarise(avg_availability_365 = round(mean(availability_365, na.rm = TRUE))) %>%
   arrange((avg_availability_365))
@@ -64,7 +51,7 @@ ggplot(summary_avg_availability, aes(x = reorder(room_type, avg_availability_365
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 
-5. summary_neighbourhood_price <- Airbnb_cleaned_listings %>%
+4. summary_neighbourhood_price <- Airbnb_cleaned_listings %>%
   group_by(neighbourhood) %>%
   summarise(avg_price = mean(price, na.rm = TRUE)) %>%
   arrange((avg_price))
@@ -75,7 +62,7 @@ ggplot(summary_neighbourhood_price, aes(x = reorder(neighbourhood, avg_price), y
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
 
-6. summary_median_avail_neighbourhood <- Airbnb_cleaned_listings %>%
+5. summary_median_avail_neighbourhood <- Airbnb_cleaned_listings %>%
   group_by(neighbourhood) %>%
   summarise(avg_avail = round(mean(availability_365))) %>%
   arrange(avg_avail)
@@ -88,7 +75,7 @@ ggplot(summary_median_avail_neighbourhood, aes(x = avg_avail, y = reorder(neighb
   theme(axis.text.y = element_text(angle = 0, hjust = 1, vjust = 0.5)) +
   theme_minimal()
 
-7. average_price_per_neighbourhood <- Airbnb_cleaned_listings %>%
+6. average_price_per_neighbourhood <- Airbnb_cleaned_listings %>%
   group_by(neighbourhood, room_type) %>%
   summarise(avg_price = mean(price, na.rm = TRUE))
 
@@ -107,22 +94,22 @@ room_type_2 <- subset(average_price_per_neighbourhood, room_type == unique_room_
 room_type_3 <- subset(average_price_per_neighbourhood, room_type == unique_room_types[3])
 room_type_4 <- subset(average_price_per_neighbourhood, room_type == unique_room_types[4])
 
-plot_1 <- ggplot(room_type_1, aes(x = reorder(neighbourhood, avg_price), y = avg_price)) +
+ggplot(room_type_1, aes(x = reorder(neighbourhood, avg_price), y = avg_price)) +
   geom_bar(stat = "identity", position = "dodge", color = "black", fill = "#F8766D") +
   labs(title = paste("Average Price for", unique_room_types[1], "per Neighborhood"), x = "Neighborhood", y = "Average Price") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
-plot_2 <- ggplot(room_type_2, aes(x = reorder(neighbourhood, avg_price), y = avg_price)) +
+ggplot(room_type_2, aes(x = reorder(neighbourhood, avg_price), y = avg_price)) +
   geom_bar(stat = "identity", position = "dodge", color = "black", fill = "#00BFC4") +
   labs(title = paste("Average Price for", unique_room_types[2], "per Neighborhood"), x = "Neighborhood", y = "Average Price") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) 
 
-plot_3 <- ggplot(room_type_3, aes(x = reorder(neighbourhood, avg_price), y = avg_price)) +
+ggplot(room_type_3, aes(x = reorder(neighbourhood, avg_price), y = avg_price)) +
   geom_bar(stat = "identity", position = "dodge", color = "black", fill = "#C77CFF") +
   labs(title = paste("Average Price for", unique_room_types[3], "per Neighborhood"), x = "Neighborhood", y = "Average Price") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
 
-plot_4 <- ggplot(room_type_4, aes(x = reorder(neighbourhood, avg_price), y = avg_price)) +
+ggplot(room_type_4, aes(x = reorder(neighbourhood, avg_price), y = avg_price)) +
   geom_bar(stat = "identity", position = "dodge", color = "black", fill = "#7CAE00") +
   labs(title = paste("Average Price for", unique_room_types[4], "per Neighborhood"), x = "Neighborhood", y = "Average Price") +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1))
@@ -141,3 +128,132 @@ london_map <- get_map(location = "London", zoom = 11, maptype = "roadmap")
 ggmap(london_map) +
   geom_point(data = Airbnb_Cleaned, aes(x = longitude, y = latitude), size = 0.1, colour = "red", alpha = 0.5) +
   labs(title = "Map of London Listings", x = "Longitude", y = "Latitude")
+
+9. library(dplyr)
+
+# Assuming 'Airbnb_cleaned_listings' contains the necessary data
+summary_neighbourhood_price <- Airbnb_cleaned_listings %>%
+  group_by(neighbourhood) %>%
+  summarise(mean_price = mean(price, na.rm = TRUE)) %>%
+  arrange(mean_price)
+
+# Now that we have 'mean_price' for each 'neighbourhood', combine with 'summary_median_avail_neighbourhood'
+summary_median_avail_neighbourhood <- summary_median_avail_neighbourhood %>%
+  left_join(summary_neighbourhood_price, by = "neighbourhood")
+
+# Visualize the relationship between median availability and mean price per neighborhood
+ggplot(summary_median_avail_neighbourhood, aes(x = avg_avail, y = reorder(neighbourhood, mean_price))) +
+  geom_point(aes(size = mean_price), color = "blue", alpha = 0.6) +
+  labs(title = "Median Price vs. Availability by Neighborhood",
+       y = "Neighborhood",
+       x = "Median Availability (365 days)",
+       size = "Mean Price") +
+  theme_minimal() +
+  theme(axis.text.y = element_text(angle = 0, hjust = 1, vjust = 0.5))
+
+10. library(dplyr)
+library(ggplot2)
+
+# Assuming 'Airbnb_cleaned_listings' contains the necessary data
+summary_median_price_room_type <- Airbnb_cleaned_listings %>%
+  group_by(room_type) %>%
+  summarise(median_price = median(price, na.rm = TRUE)) %>%
+  arrange(median_price)
+
+# Visualize the relationship between room types and median price
+ggplot(summary_median_price_room_type, aes(x = reorder(room_type, median_price), y = median_price, fill = room_type)) +
+  geom_bar(stat = "identity", color = "black") +
+  labs(title = "Median Price by Room Type",
+       x = "Room Type",
+       y = "Median Price") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+10.1. 
+
+library(ggplot2)
+library(dplyr)
+
+# Assuming 'Airbnb_cleaned_listings' contains the necessary data
+summary_median_price_room_type <- Airbnb_cleaned_listings %>%
+  group_by(room_type) %>%
+  summarise(median_price = median(price, na.rm = TRUE)) %>%
+  arrange(median_price)
+
+# Calculate median availability for each room type
+summary_median_avail_room_type <- Airbnb_cleaned_listings %>%
+  group_by(room_type) %>%
+  summarise(median_avail = median(availability_365, na.rm = TRUE)) %>%
+  arrange(median_avail)
+
+# Merge both summaries
+summary_combined <- merge(summary_median_price_room_type, summary_median_avail_room_type, by = "room_type")
+
+shape_mapping <- c("Entire home/apt" = 0, "Private room" = 1, "Shared room" = 2, "")
+summary_combined$shape <- shape_mapping[summary_combined$room_type]
+
+ggplot(summary_combined, aes(x = median_avail, y = median_price, shape = room_type, color = room_type)) +
+  geom_point(size = 6) +
+  labs(title = "Median Price by Room Type vs. Availability",
+       x = "Median Availability (365 days)",
+       y = "Median Price") +
+  scale_color_discrete(name = "Room Type") +
+  scale_shape_discrete(name = "Room Type") +
+  theme_minimal()
+
+
+11.# Assuming 'Airbnb_cleaned_listings' contains the necessary data
+library(dplyr)
+library(ggplot2)
+
+# Calculate IQR for each room type
+summary_iqr_price_per_room_type <- Airbnb_cleaned_listings %>%
+  group_by(room_type) %>%
+  summarise(lower = quantile(price, 0.25, na.rm = TRUE),
+            middle = median(price, na.rm = TRUE),
+            upper = quantile(price, 0.75, na.rm = TRUE)) %>%
+  mutate(min_price = min(lower),
+         max_price = max(upper))
+
+ggplot(summary_iqr_price_per_room_type, aes(x = room_type, fill = room_type)) +
+  geom_boxplot(aes(lower = lower, upper = upper, middle = middle, ymin = min_price, ymax = max_price), 
+               stat = "identity", width = 0.5) +
+  labs(title = "Boxplot for Room Type Prices",
+       x = "Room Type",
+       y = "Price") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+12. # Assuming 'Airbnb_data' contains necessary columns: 'rating' and 'availability'
+
+library(dplyr)
+library(ggplot2)
+
+# Summarize median rating by availability
+summary_median_rating_vs_availability <- Airbnb_cleaned_listings %>%
+  group_by(availability_365) %>%
+  summarise(median_rating = median(rating, na.rm = TRUE)) %>%
+  arrange(availability_365)
+
+# Calculate correlation coefficient
+correlation_coefficient <- cor(summary_median_rating_vs_availability$availability_365, 
+                               summary_median_rating_vs_availability$median_rating, 
+                               use = "complete.obs")
+
+
+# Visualize the summary using a scatter plot
+ggplot(summary_median_rating_vs_availability, aes(x = availability_365, y = median_rating)) +
+  geom_point() +
+  labs(title = "Median Rating vs Availability",
+       x = "Availability",
+       y = "Median Rating") +
+  theme_minimal() +
+  annotate("text", x = max(summary_median_rating_vs_availability$availability_365), 
+                            y = min(summary_median_rating_vs_availability$median_rating), 
+                            label = paste("Correlation Coefficient:", round(correlation_coefficient, 2)), 
+                            hjust = 1, vjust = 0)
+
+
+
+
+
